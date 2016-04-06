@@ -76,20 +76,15 @@ defmodule Mnemonex.Coder do
   defp gather_words(<<a>>,state,acc), do: gather_words(<<>>,state,[elem(state.words, a|>rem(state.base_words))|acc])
 
   defp format_mnx(words, state) do
-    words  |> group_words(state, [])
-           |> group_lines(state, [])
+    words  |> combine(state.words_per_group, state.word_sep, [])
+           |> combine(state.groups_per_line, state.group_sep, [])
            |> final_output(state)
   end
 
-  defp group_words([], _state, acc), do: acc |> Enum.reverse
-  defp group_words(words, state, acc) do
-      {these, rest} = Enum.split(words,state.words_per_group)
-      group_words(rest, state, [Enum.join(these, state.word_sep)|acc])
-  end
-  defp group_lines([], _state, acc), do: acc |> Enum.reverse
-  defp group_lines(groups, state, acc) do
-      {these, rest} = Enum.split(groups,state.groups_per_line)
-      group_lines(rest, state, [Enum.join(these, state.group_sep)|acc])
+  defp combine([], _c, _s, acc), do: acc |> Enum.reverse
+  defp combine(bits, count, sep, acc) do
+      {these, rest} = Enum.split(bits,count)
+      combine(rest, count, sep, [Enum.join(these, sep)|acc])
   end
   defp final_output(lines, state), do: state.line_prefix<>Enum.join(lines, state.line_suffix<>state.line_prefix)<>state.line_suffix
 
