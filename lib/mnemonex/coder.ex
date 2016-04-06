@@ -44,36 +44,32 @@ defmodule Mnemonex.Coder do
   end
   defp words_to_bin([a],base, acc), do: words_to_bin([], base, acc<><<a>>)
 
-  defp gather_words(<<>>,_state,acc), do: acc |> Enum.reverse |> List.flatten
+  defp word_x([], _s, acc), do: acc
+  defp word_x([a|rest], s, acc), do: word_x(rest, s + 8, acc ||| bsl(a,s))
+
+  defp to_words(_x,0,_base,acc), do: acc
+  defp to_words(x,1,base,acc), do: to_words(x,0,base, [ x |> rem(base) | acc])
+  defp to_words(x,2,base,acc), do: to_words(x,1,base, [ x |> div(base) |> rem(base) | acc])
+  defp short_final_word(x,base,extra), do: to_words(x,2,base,[base +(x |> div(base) |> div(base) |> rem(base) |> rem(extra))])
+  defp long_final_word(x,base), do: to_words(x,2,base,[x |> div(base) |> div(base) |> rem(base)])
+
+  defp gather_words(<<>>,state,acc), do: acc |> Enum.reverse |> List.flatten |> Enum.map(fn n -> elem(state.words, n) end)
   defp gather_words(<<a,b,c,d,rest::binary>>,state,acc) do
-      base = state.base_words
-      x = a
-      x = x ||| (b <<< 8)
-      x = x ||| (c <<< 16)
-      x = x ||| (d <<< 24)
-      words = [x |> rem(base), x |> div(base) |> rem(base), x |> div(base) |> div(base) |> rem(base)]
-      |> Enum.map(fn n -> elem(state.words, n) end)
+     words = word_x([a,b,c,d],0,0) |> long_final_word(state.base_words)
      gather_words(rest,state,[words|acc])
   end
   defp gather_words(<<a,b,c>>,state,acc) do
-      base = state.base_words
-      extra = state.rem_words
-      x = a
-      x = x ||| (b <<< 8)
-      x = x ||| (c <<< 16)
-      words = [x |> rem(base), x |> div(base) |> rem(base), base + (x |> div(base) |> div(base) |> rem(base) |> rem(extra))]
-      |> Enum.map(fn n -> elem(state.words, n) end)
+     words = word_x([a,b,c],0,0) |> short_final_word(state.base_words,state.rem_words)
      gather_words(<<>>,state,[words|acc])
   end
   defp gather_words(<<a,b>>,state,acc) do
-      base = state.base_words
-      x = a
-      x = x ||| (b <<< 8)
-      words = [x |> rem(base), x |> div(base) |> rem(base)]
-      |> Enum.map(fn n -> elem(state.words, n) end)
+     words = word_x([a,b],0,0) |> to_words(2,state.base_words,[])
      gather_words(<<>>,state,[words|acc])
   end
-  defp gather_words(<<a>>,state,acc), do: gather_words(<<>>,state,[elem(state.words, a|>rem(state.base_words))|acc])
+  defp gather_words(<<a>>,state,acc) do
+     words = word_x([a],0,0) |> to_words(1,state.base_words,[])
+     gather_words(<<>>,state,[words|acc])
+  end
 
   defp format_mnx(words, state) do
     words  |> combine(state.words_per_group, state.word_sep, [])
