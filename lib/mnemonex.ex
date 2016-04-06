@@ -1,18 +1,26 @@
 defmodule Mnemonex do
   use Application
 
-  # See http://elixir-lang.org/docs/stable/elixir/Application.html
-  # for more information on OTP Applications
+  @moduledoc """
+  Mnemonex application
+
+  The instance will be accessible from the process registry via
+  the `:mnx_coder` atom.  In general, you should not need to know this
+  as the `Coder` functions default to that instance.
+  """
+
+  @doc """
+  application start
+
+  Any supplied arguments are ignored.
+  """
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     children = [
-      # Define workers and child supervisors to be supervised
-      # worker(Mnemonex.Worker, [arg1, arg2, arg3]),
+      worker(Mnemonex.Coder, [:mnx_coder])
     ]
 
-    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Mnemonex.Supervisor]
     Supervisor.start_link(children, opts)
   end

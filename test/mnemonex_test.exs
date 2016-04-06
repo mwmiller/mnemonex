@@ -1,8 +1,7 @@
 defmodule MnemonexTest do
-  use ExUnit.Case
+  use PowerAssert
   doctest Mnemonex
 
-  test "the truth" do
-    assert 1 + 1 == 2
-  end
+  # Should figure out something to do here.
+
 end
