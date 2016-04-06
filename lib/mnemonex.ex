@@ -40,10 +40,10 @@ defmodule Mnemonex do
   word6-word7
   ```
   """
-  @spec encode(binary | pos_integer, pid) :: binary
+  @spec encode(binary | pos_integer, term) :: binary
   def encode(input, server \\ @process)
   def encode(input, server) when is_binary(input), do: GenServer.call(server, {:encode, input})
-  def encode(input, server) when is_integer input and input > 0 do
+  def encode(input, server) when is_integer(input) and input > 0 do
     GenServer.call(server, {:encode, :binary.encode_unsigned(input)})
   end
 
@@ -53,7 +53,7 @@ defmodule Mnemonex do
   All non-alphabetic (ASCII) characters are treated as word breaks.  There is
   presently no graceful handling of improperly entered words.
   """
-  @spec decode(binary, pid) :: binary
+  @spec decode(binary, term) :: binary
   def decode(input, server \\ @process) when is_binary(input), do: GenServer.call(server, {:decode, input})
 
 end
