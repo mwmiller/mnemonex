@@ -3,50 +3,15 @@ defmodule Mnemonex.Coder do
   use Bitwise
 
   @moduledoc """
-  Mnemonex server
-
-  The encoding and decoding functions are exposed here via
-  calls to the server process.
+  Mnemonex server process
   """
 
   @doc """
-  Start a child process
-
-  The default application server is accessible via the atom `:mnx_coder`.
-  As a convenience, all functions default to use this server.
+  Start a linked process
   """
   def start_link(name) do
     GenServer.start_link(__MODULE__, :ok, name: name)
   end
-
-  @doc """
-  encode a binary
-
-  Unsigned big-endian integers may also be encoded, but note that there is presently
-  no affordance to decode them back to same.
-
-  The output will be formatted with 2 groups of three words per line:
-
-  ```
-  word0-word1-word2--word3-word4-word5
-  word6-word7
-  ```
-  """
-  @spec encode(binary | pos_integer, pid) :: binary
-  def encode(input, server \\ :mnx_coder)
-  def encode(input, server) when is_binary(input), do: GenServer.call(server, {:encode, input})
-  def encode(input, server) when is_integer input and input > 0 do
-    GenServer.call(server, {:encode, :binary.encode_unsigned(input)})
-  end
-
-  @doc """
-  decode a mnemonicoded word list
-
-  All non-alphabetic (ASCII) characters are treated as word breaks.  There is
-  presently no graceful handling of improperly entered words.
-  """
-  @spec decode(binary, pid) :: binary
-  def decode(input, server \\ :mnx_coder) when is_binary(input), do: GenServer.call(server, {:decode, input})
 
   def init(:ok) do
     {:ok, Mnemonex.State.init}

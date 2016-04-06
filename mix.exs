@@ -3,7 +3,7 @@ defmodule Mnemonex.Mixfile do
 
   def project do
     [app: :mnemonex,
-     version: "0.0.1",
+     version: "0.0.2",
      elixir: "~> 1.2",
      name: "Mnemonex",
      source_url: "https://github.com/mwmiller/mnemonex",
