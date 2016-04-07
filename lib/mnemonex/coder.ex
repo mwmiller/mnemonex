@@ -14,7 +14,7 @@ defmodule Mnemonex.Coder do
   end
 
   def init(:ok) do
-    {:ok, Mnemonex.State.init}
+    {:ok, Mnemonex.Config.init}
   end
 
   def handle_call({:encode, string}, _from, state), do: {:reply, string |> gather_words(state,[]) |> format_mnx(state), state}

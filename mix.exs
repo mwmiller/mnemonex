@@ -3,7 +3,7 @@ defmodule Mnemonex.Mixfile do
 
   def project do
     [app: :mnemonex,
-     version: "0.0.2",
+     version: "0.1.0",
      elixir: "~> 1.2",
      name: "Mnemonex",
      source_url: "https://github.com/mwmiller/mnemonex",
@@ -29,7 +29,7 @@ defmodule Mnemonex.Mixfile do
 
   defp description do
     """
-    Mnemonex - a mnemonicode encoder/decoder
+    mnemonicode encoder/decoder
     """
   end
 

@@ -1,14 +1,13 @@
 defmodule Mnemonex do
   use Application
 
-  @process :mnx_coder
+  @process Application.get_env(:mnemonex, :process_atom)
 
   @moduledoc """
   Mnemonex application
 
-  The instance will be accessible from the process registry via
-  the `:mnx_coder` atom.  In general, you should not need to know this
-  as the useful functions default to that instance.
+  The default instance will be accessible from the process registry via
+  the `process_atom` configuration variable.
   """
 
   @doc """
@@ -33,12 +32,7 @@ defmodule Mnemonex do
   Unsigned big-endian integers may also be encoded, but note that there is presently
   no affordance to decode them back to same.
 
-  The output will be formatted with 2 groups of three words per line:
-
-  ```
-  word0-word1-word2--word3-word4-word5
-  word6-word7
-  ```
+  The output format depends on configuration variables (described therein.)
   """
   @spec encode(binary | pos_integer, term) :: binary
   def encode(input, server \\ @process)
