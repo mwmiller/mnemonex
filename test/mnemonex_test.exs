@@ -17,6 +17,9 @@ defmodule Mnemonex.CoderTest do
     assert Mnemonex.encode(<<1,2,3,4,5,6,7>>,   coder) ==  "papa-twist-alpine--chess-flute-ego\n"
     assert Mnemonex.encode(<<1,2,3,4,5,6,7,8>>, coder) ==  "papa-twist-alpine--content-sailor-athena\n";
     assert Mnemonex.encode(0x0102030405060708,  coder) ==  "papa-twist-alpine--content-sailor-athena\n";
+
+    assert Mnemonex.encode(0xDEADBEEF,          coder) == "cigar-piano-round\n"
+    assert Mnemonex.encode(<<222,173,190,239>>, coder) == "cigar-piano-round\n"
   end
 
   test "decode", %{coder: coder} do
@@ -28,6 +31,8 @@ defmodule Mnemonex.CoderTest do
     assert Mnemonex.decode("papa/twist/alpine shine/academy",            coder) == <<1,2,3,4,5,6>>
     assert Mnemonex.decode("papa\ntwist\nalpine\nchess\nflute\nego\n",   coder) == <<1,2,3,4,5,6,7>>
     assert Mnemonex.decode("papa-twist-alpine--content-sailor-athena\n", coder) == <<1,2,3,4,5,6,7,8>>
+
+    assert Mnemonex.decode("cigar-piano-round",                          coder) == <<222, 173, 190, 239>>
   end
 
   test "fuzzy round trip", %{coder: coder} do
