@@ -1,6 +1,7 @@
 defmodule Mnemonex.Coder do
   use GenServer
   use Bitwise
+  alias TheFuzz.Phonetic.MetaphoneAlgorithm, as: MPA
 
   @moduledoc """
   Mnemonex server process
@@ -22,7 +23,14 @@ defmodule Mnemonex.Coder do
 
   defp gather_numbers(string,state), do: Regex.scan(~r/[a-z]+/, string |> String.downcase)
                                           |> List.flatten
-                                          |> Enum.map( fn w -> Map.fetch!(state.word_indices, w) end)
+                                          |> Enum.map( fn w -> word_to_index(w,state) end)
+  defp word_to_index(word, state) do
+      case Map.fetch(state.word_indices, word) do
+            {:ok, v} -> v
+            :error   -> sounds_like = word |> MPA.compute
+                        Map.fetch!(state.metaphone_map, sounds_like) |> word_to_index(state)
+      end
+  end
 
   defp right_size(x,c) when byte_size(x) >= c, do: binary_part(x,0,c)
   defp right_size(x,c) when byte_size(x) < c,  do: right_size(x<><<0>>,c)

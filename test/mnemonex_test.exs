@@ -35,6 +35,11 @@ defmodule Mnemonex.CoderTest do
     assert Mnemonex.decode("cigar-piano-round",                          coder) == <<222, 173, 190, 239>>
   end
 
+  test "soundalike", %{coder: coder} do
+    assert Mnemonex.decode("colombo-academy", coder) == Mnemonex.decode("columbo-academie", coder)
+    assert Mnemonex.decode("analog", coder)          == Mnemonex.decode("analogue", coder)
+  end
+
   test "fuzzy round trip", %{coder: coder} do
     test_em = fn
                  ([], _fun)      -> :noop

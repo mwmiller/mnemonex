@@ -1,4 +1,5 @@
 defmodule Mnemonex.Config do
+  alias TheFuzz.Phonetic.MetaphoneAlgorithm, as: MPA
 
   @moduledoc """
   word list configuration state
@@ -6,10 +7,12 @@ defmodule Mnemonex.Config do
 
 
   defstruct [words: {}, word_indices: %{}, words_version: nil,
-            total_words: nil, base_words: nil, rem_words: nil,
-            words_per_group: 3, groups_per_line: 2,
-            word_sep: "-", group_sep: "--",
-            line_prefix: "", line_suffix: "\n"]
+             metaphone_map: %{},
+             total_words: nil, base_words: nil, rem_words: nil,
+             words_per_group: 3, groups_per_line: 2,
+             word_sep: "-", group_sep: "--",
+             line_prefix: "", line_suffix: "\n"
+            ]
 
   @type t :: %__MODULE__{}
 
@@ -25,11 +28,12 @@ defmodule Mnemonex.Config do
       base_words  = config[:base_words]
       all_words   = combine_tuples(base_words,short_words)
       struct(__struct__,
-              words: all_words,
+              words:           all_words,
               total_words:     tuple_size(all_words),
               base_words:      tuple_size(base_words),
               rem_words:       tuple_size(short_words),
               word_indices:    word_map(all_words),
+              metaphone_map:   metaphone_map(all_words),
               words_version:   config[:words_version],
               words_per_group: config[:words_per_group],
               word_sep:        config[:word_separator],
@@ -51,6 +55,24 @@ defmodule Mnemonex.Config do
         |> Tuple.to_list
         |> Enum.zip(0 .. tuple_size(words) - 1)
         |> Enum.reduce(%{}, fn({w,i},acc) -> Map.put(acc,w,i) end)
+  end
+
+  defp map_uniqs({k,v},{uniq, all}) do
+     uniq = case Map.fetch(all, k) do
+              {:ok, _ov} -> Map.delete(uniq, k)
+              :error     -> Map.put(uniq, k, v)
+            end
+    all = Map.put(uniq, k, v)
+    {uniq, all}
+  end
+
+  defp metaphone_map(words) do
+      word_list = words |> Tuple.to_list
+      word_list
+         |> Enum.map(&MPA.compute/1)
+         |> Enum.zip(word_list)
+         |> Enum.reduce({%{},%{}}, &map_uniqs/2)
+         |> elem(0)
   end
 
 end
