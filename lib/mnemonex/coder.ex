@@ -24,25 +24,18 @@ defmodule Mnemonex.Coder do
                                           |> List.flatten
                                           |> Enum.map( fn w -> Map.fetch!(state.word_indices, w) end)
 
-  def make_binary(x,c), do: x |> :binary.encode_unsigned(:little) |> right_size(c)
   defp right_size(x,c) when byte_size(x) >= c, do: binary_part(x,0,c)
   defp right_size(x,c) when byte_size(x) < c,  do: right_size(x<><<0>>,c)
   defp multi_add([a], _base, acc), do: acc + a
   defp multi_add([x|rest], base, acc), do: multi_add(rest, base,x |> (&(acc + &1)).() |> (&(base * &1)).())
+
   defp words_to_bin([],_state, acc), do: acc
-  defp words_to_bin([a,b,c|rest],base, acc) when c >= base do
-      res =  [c - base, b, a] |> multi_add(base,0) |> make_binary(3)
-      words_to_bin(rest, base, acc<>res)
-  end
-  defp words_to_bin([a,b,c|rest],base, acc) when c < base do
-      res =  [c, b, a] |> multi_add(base,0) |> make_binary(4)
-      words_to_bin(rest, base, acc<>res)
-  end
-  defp words_to_bin([a,b],base, acc) do
-     res = [b,a] |> multi_add(base,0) |> make_binary(2)
-     words_to_bin([], base, acc<>res)
-  end
-  defp words_to_bin([a],base, acc), do: words_to_bin([], base, acc<><<a>>)
+  defp words_to_bin([a,b,c|rest],base, acc) when c >= base, do: words_to_bin(rest, base, acc<>make_binary([c - base, b, a], 3, base))
+  defp words_to_bin([a,b,c|rest],base, acc) when c <  base, do: words_to_bin(rest, base, acc<>make_binary([c, b, a], 4, base))
+  defp words_to_bin([a,b|rest],  base, acc),                do: words_to_bin(rest, base, acc<>make_binary([b, a], 2, base))
+  defp words_to_bin([a|rest],    base, acc),                do: words_to_bin(rest, base, acc<>make_binary([a], 1, base))
+
+  def make_binary(list,c,base), do: list |> multi_add(base,0) |> :binary.encode_unsigned(:little) |> right_size(c)
 
   defp word_x([], _s, acc), do: acc
   defp word_x([a|rest], s, acc), do: word_x(rest, s + 8, acc ||| bsl(a,s))
