@@ -2,7 +2,7 @@ defmodule Mnemonex.CoderTest do
   use PowerAssert
 
   setup context do
-    {:ok, coder} = Mnemonex.Coder.start_link(context.test)
+    {:ok, coder} = Mnemonex.Coder.start_link(Mnemonex.parse_coder_options([word_separator: " "]), context.test)
     {:ok, coder: coder}
   end
 

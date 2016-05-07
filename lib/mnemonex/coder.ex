@@ -10,12 +10,12 @@ defmodule Mnemonex.Coder do
   @doc """
   Start a linked process
   """
-  def start_link(name) do
-    GenServer.start_link(__MODULE__, :ok, name: name)
+  def start_link(opts, name) do
+    GenServer.start_link(__MODULE__, opts, name: name)
   end
 
-  def init(:ok) do
-    {:ok, Mnemonex.Config.init}
+  def init(opts) do
+    {:ok, Mnemonex.Config.init(opts)}
   end
 
   def handle_call({:encode, string}, _from, state), do: {:reply, string |> gather_words(state,[]) |> format_mnx(state), state}
@@ -73,9 +73,13 @@ defmodule Mnemonex.Coder do
   end
 
   defp format_mnx(words, state) do
-    words  |> combine(state.words_per_group, state.word_sep, [])
-           |> combine(state.groups_per_line, state.group_sep, [])
-           |> final_output(state)
+    if state.as_list do
+      words
+    else
+      words  |> combine(state.words_per_group, state.word_sep, [])
+             |> combine(state.groups_per_line, state.group_sep, [])
+             |> final_output(state)
+    end
   end
 
   defp combine([], _c, _s, acc), do: acc |> Enum.reverse

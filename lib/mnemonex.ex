@@ -1,25 +1,55 @@
 defmodule Mnemonex do
   use Application
 
-  @process Application.get_env(:mnemonex, :process_atom)
+  @process :mnx_coder
 
   @moduledoc """
   Mnemonex application
 
-  The default instance will be accessible from the process registry via
-  the `process_atom` configuration variable.
   """
 
+  @typedoc """
+  A keyword list with output formatting options
+
+  - `name`: registered process name (default: `:mnx_coder`)
+  - `as_list`: return a list of unformatted words (default: `false`)
+  - `words_per_group`: words per output group (default: `3`)
+  - `word_separator`: combining words in a group (default: `-`)
+  - `groups_per_line`: groups per output line (default: `2`)
+  - `group_separator`: combining groups in a line (default: `--`)
+  - `line_prefix`: prepended to each output line (default: empty string)
+  - `line_suffix`: appended to each output line (default: `\n`)
+
+  """
+  @type coder_options :: [name: atom, as_list: boolean,
+                          words_per_group: pos_integer, word_separator: String.t,
+                          groups_per_line: pos_integer, group_separator: String.t,
+                          line_prefix: String.t, line_suffix: String.t]
+
+  @spec parse_coder_options(coder_options) :: coder_options
+  @doc false
+  def parse_coder_options(options) do
+    [
+      name: Keyword.get(options, :name, @process),
+      as_list: Keyword.get(options, :as_list, false),
+      words_per_group: Keyword.get(options, :words_per_group, 3),
+      word_separator: Keyword.get(options, :word_separator, "-"),
+      groups_per_line: Keyword.get(options, :groups_per_line, 2),
+      group_separator: Keyword.get(options, :group_separator, "--"),
+      line_prefix: Keyword.get(options, :line_prefix, ""),
+      line_suffix: Keyword.get(options, :line_suffix, "\n"),
+    ]
+  end
   @doc """
   application start
-
-  Any supplied arguments are ignored.
   """
-  def start(_type, _args) do
+  def start(_type, opts \\ []) do
     import Supervisor.Spec, warn: false
 
+    filled_out = parse_coder_options(opts)
+
     children = [
-      worker(Mnemonex.Coder, [@process])
+      worker(Mnemonex.Coder, [filled_out, filled_out[:name]])
     ]
 
     opts = [strategy: :one_for_one, name: Mnemonex.Supervisor]

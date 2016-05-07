@@ -1,13 +1,6 @@
 use Mix.Config
 
 config :mnemonex, [
-      process_atom:     :mnx_coder,  # Process registry entry
-      words_per_group:  3,           # How many words per output group
-      word_separator:   "-",         # How words in a group are combined
-      groups_per_line:  2,           # How many groups per output line
-      group_separator:  "--",        # How groups in a line are combined
-      line_prefix:      "",          # Prepended to each output line
-      line_suffix:      "\n",        # Appended to each output line
       words_version:    "0.7",       # Which word list is included
       # For encoding 24-bit remainders
       short_words: {"ego","fax","jet","job","rio","ski","yes"},

@@ -5,13 +5,12 @@ defmodule Mnemonex.Config do
   word list configuration state
   """
 
-
   defstruct [words: {}, word_indices: %{}, words_version: nil,
-             metaphone_map: %{},
+             metaphone_map: %{}, as_list: false,
              total_words: nil, base_words: nil, rem_words: nil,
-             words_per_group: 3, groups_per_line: 2,
-             word_sep: "-", group_sep: "--",
-             line_prefix: "", line_suffix: "\n"
+             words_per_group: 0, groups_per_line: 0,
+             word_sep: "", group_sep: "",
+             line_prefix: "", line_suffix: ""
             ]
 
   @type t :: %__MODULE__{}
@@ -19,10 +18,8 @@ defmodule Mnemonex.Config do
   # Update base/remainder if changed with word list change.
   @doc """
   initialize the word list state
-
-  Customized via the `:mnemonex` config.
   """
-  def init do
+  def init(opts) do
       config      = Application.get_all_env(:mnemonex)
       short_words = config[:short_words]
       base_words  = config[:base_words]
@@ -35,12 +32,13 @@ defmodule Mnemonex.Config do
               word_indices:    word_map(all_words),
               metaphone_map:   metaphone_map(all_words),
               words_version:   config[:words_version],
-              words_per_group: config[:words_per_group],
-              word_sep:        config[:word_separator],
-              groups_per_line: config[:groups_per_line],
-              group_sep:       config[:group_separator],
-              line_prefix:     config[:line_prefix],
-              line_suffix:     config[:line_suffix],
+              as_list:         opts[:as_list],
+              words_per_group: opts[:words_per_group],
+              word_sep:        opts[:word_separator],
+              groups_per_line: opts[:groups_per_line],
+              group_sep:       opts[:group_separator],
+              line_prefix:     opts[:line_prefix],
+              line_suffix:     opts[:line_suffix],
             )
   end
 
