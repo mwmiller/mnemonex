@@ -23,7 +23,7 @@ defmodule Mnemonex.Mixfile do
     [
       {:the_fuzz, "~> 0.3"},
       {:power_assert, "~> 0.0.8", only: :test},
-      {:earmark, ">= 0.0.0", only: :dev},
+      {:earmark, "~> 0.2", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
     ]
   end
