@@ -1,5 +1,5 @@
 defmodule Mnemonex.CoderTest do
-  use PowerAssert
+  use ExUnit.Case
 
   setup context do
     {:ok, coder} = Mnemonex.Coder.start_link(Mnemonex.parse_coder_options([]), context.test)
