@@ -3,7 +3,7 @@ defmodule Mnemonex.Mixfile do
 
   def project do
     [app: :mnemonex,
-     version: "1.1.2",
+     version: "1.1.3",
      elixir: "~> 1.3",
      name: "Mnemonex",
      source_url: "https://github.com/mwmiller/mnemonex",
@@ -23,7 +23,7 @@ defmodule Mnemonex.Mixfile do
     [
       {:the_fuzz, "~> 0.3"},
       {:earmark, "~> 1.0", only: :dev},
-      {:ex_doc, "~> 0.13", only: :dev},
+      {:ex_doc, "~> 0.14", only: :dev},
     ]
   end
 
