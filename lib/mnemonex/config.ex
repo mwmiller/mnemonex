@@ -24,7 +24,7 @@ defmodule Mnemonex.Config do
       short_words = config[:short_words]
       base_words  = config[:base_words]
       all_words   = combine_tuples(base_words,short_words)
-      struct(__struct__,
+      struct(__struct__(),
               words:           all_words,
               total_words:     tuple_size(all_words),
               base_words:      tuple_size(base_words),

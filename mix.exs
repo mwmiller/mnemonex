@@ -3,15 +3,15 @@ defmodule Mnemonex.Mixfile do
 
   def project do
     [app: :mnemonex,
-     version: "1.1.3",
-     elixir: "~> 1.3",
+     version: "1.1.4",
+     elixir: "~> 1.4",
      name: "Mnemonex",
      source_url: "https://github.com/mwmiller/mnemonex",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     description: description,
-     package: package,
-     deps: deps]
+     description: description(),
+     package: package(),
+     deps: deps()]
   end
 
   def application do
