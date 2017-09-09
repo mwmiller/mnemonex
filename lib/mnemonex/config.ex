@@ -23,7 +23,7 @@ defmodule Mnemonex.Config do
       config      = Application.get_all_env(:mnemonex)
       short_words = config[:short_words]
       base_words  = config[:base_words]
-      all_words   = combine_tuples(base_words,short_words)
+      all_words   = combine_tuples(base_words, short_words)
       struct(__struct__(),
               words:           all_words,
               total_words:     tuple_size(all_words),
@@ -43,19 +43,19 @@ defmodule Mnemonex.Config do
   end
 
   defp combine_tuples(first, second) do
-    [first,second] |> Enum.map(&Tuple.to_list/1)
-                   |> List.flatten
-                   |> List.to_tuple
+    [first, second] |> Enum.map(&Tuple.to_list/1)
+                    |> List.flatten
+                    |> List.to_tuple
   end
 
   defp word_map(words) do
       words
         |> Tuple.to_list
         |> Enum.zip(0 .. tuple_size(words) - 1)
-        |> Enum.reduce(%{}, fn({w,i},acc) -> Map.put(acc,w,i) end)
+        |> Enum.reduce(%{}, fn({w, i}, acc) -> Map.put(acc, w, i) end)
   end
 
-  defp map_uniqs({k,v},{uniq, all}) do
+  defp map_uniqs({k, v}, {uniq, all}) do
      uniq = case Map.fetch(all, k) do
               {:ok, _ov} -> Map.delete(uniq, k)
               :error     -> Map.put(uniq, k, v)
@@ -69,7 +69,7 @@ defmodule Mnemonex.Config do
       word_list
          |> Enum.map(&MPA.compute/1)
          |> Enum.zip(word_list)
-         |> Enum.reduce({%{},%{}}, &map_uniqs/2)
+         |> Enum.reduce({%{}, %{}}, &map_uniqs/2)
          |> elem(0)
   end
 
