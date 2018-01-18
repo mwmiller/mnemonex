@@ -21,10 +21,16 @@ defmodule Mnemonex do
   - `line_suffix`: appended to each output line (default: `\n`)
 
   """
-  @type coder_options :: [name: atom, as_list: boolean,
-                          words_per_group: pos_integer, word_separator: String.t,
-                          groups_per_line: pos_integer, group_separator: String.t,
-                          line_prefix: String.t, line_suffix: String.t]
+  @type coder_options :: [
+          name: atom,
+          as_list: boolean,
+          words_per_group: pos_integer,
+          word_separator: String.t(),
+          groups_per_line: pos_integer,
+          group_separator: String.t(),
+          line_prefix: String.t(),
+          line_suffix: String.t()
+        ]
 
   @spec parse_coder_options(coder_options) :: coder_options
   @doc false
@@ -37,9 +43,10 @@ defmodule Mnemonex do
       groups_per_line: Keyword.get(options, :groups_per_line, 2),
       group_separator: Keyword.get(options, :group_separator, "--"),
       line_prefix: Keyword.get(options, :line_prefix, ""),
-      line_suffix: Keyword.get(options, :line_suffix, "\n"),
+      line_suffix: Keyword.get(options, :line_suffix, "\n")
     ]
   end
+
   @doc """
   application start
   """
@@ -67,6 +74,7 @@ defmodule Mnemonex do
   @spec encode(binary | pos_integer, term) :: binary
   def encode(input, server \\ @process)
   def encode(input, server) when is_binary(input), do: GenServer.call(server, {:encode, input})
+
   def encode(input, server) when is_integer(input) and input > 0 do
     GenServer.call(server, {:encode, :binary.encode_unsigned(input)})
   end
@@ -78,6 +86,6 @@ defmodule Mnemonex do
   presently no graceful handling of improperly entered words.
   """
   @spec decode(binary, term) :: binary
-  def decode(input, server \\ @process) when is_binary(input), do: GenServer.call(server, {:decode, input})
-
+  def decode(input, server \\ @process) when is_binary(input),
+    do: GenServer.call(server, {:decode, input})
 end
