@@ -46,7 +46,8 @@ defmodule Mnemonex.CoderTest do
   end
 
   test "soundalike", %{coder: coder} do
-    assert Mnemonex.decode("colombo-academy", coder) == Mnemonex.decode("columbo-academie", coder),
+    assert Mnemonex.decode("colombo-academy", coder) ==
+             Mnemonex.decode("columbo-academie", coder),
            "Both included == both sound-alike"
 
     assert Mnemonex.decode("hullo-analog", coder) == Mnemonex.decode("hello-analogue", coder),
