@@ -1661,7 +1661,6 @@ defmodule Mnemonex.Config do
   initialize the word list state
   """
   def init(opts) do
-    config = Application.get_all_env(:mnemonex)
     short_words = @short_words
     base_words = @base_words
     all_words = combine_tuples(base_words, short_words)
@@ -1674,7 +1673,7 @@ defmodule Mnemonex.Config do
       rem_words: tuple_size(short_words),
       word_indices: word_map(all_words),
       metaphone_map: metaphone_map(all_words),
-      words_version: config[:words_version],
+      words_version: @words_version,
       as_list: opts[:as_list],
       words_per_group: opts[:words_per_group],
       word_sep: opts[:word_separator],
