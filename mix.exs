@@ -4,8 +4,8 @@ defmodule Mnemonex.Mixfile do
   def project do
     [
       app: :mnemonex,
-      version: "1.2.1",
-      elixir: "~> 1.4",
+      version: "1.2.2",
+      elixir: "~> 1.7",
       name: "Mnemonex",
       source_url: "https://github.com/mwmiller/mnemonex",
       build_embedded: Mix.env() == :prod,
@@ -22,10 +22,10 @@ defmodule Mnemonex.Mixfile do
 
   defp deps do
     [
-      {:the_fuzz, "~> 0.4"},
+      {:the_fuzz, "~> 0.5"},
       {:earmark, "~> 1.0", only: :dev},
       {:ex_doc, "~> 0.16", only: :dev},
-      {:credo, "~> 0.9", only: [:dev, :test]}
+      {:credo, "~> 1.0", only: [:dev, :test]}
     ]
   end
 
