@@ -23,7 +23,6 @@ defmodule Mnemonex.Mixfile do
   defp deps do
     [
       {:the_fuzz, "~> 0.5"},
-      {:earmark, "~> 1.4", only: :dev},
       {:ex_doc, "~> 0.23", only: :dev},
     ]
   end
