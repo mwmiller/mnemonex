@@ -56,7 +56,7 @@ defmodule Mnemonex do
     filled_out = parse_coder_options(opts)
 
     children = [
-      worker(Mnemonex.Coder, [filled_out, filled_out[:name]])
+      {Mnemonex.Coder, [filled_out, filled_out[:name]]}
     ]
 
     opts = [strategy: :one_for_one, name: Mnemonex.Supervisor]

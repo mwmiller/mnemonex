@@ -1,6 +1,6 @@
 defmodule Mnemonex.Coder do
   use GenServer
-  use Bitwise
+  import Bitwise
   alias TheFuzz.Phonetic.MetaphoneAlgorithm, as: MPA
 
   @moduledoc """
@@ -10,7 +10,7 @@ defmodule Mnemonex.Coder do
   @doc """
   Start a linked process
   """
-  def start_link(opts, name) do
+  def start_link(opts, name \\ :mnemonex) do
     GenServer.start_link(__MODULE__, opts, name: name)
   end
 

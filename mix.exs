@@ -4,7 +4,7 @@ defmodule Mnemonex.Mixfile do
   def project do
     [
       app: :mnemonex,
-      version: "1.2.2",
+      version: "1.2.3",
       elixir: "~> 1.7",
       name: "Mnemonex",
       source_url: "https://github.com/mwmiller/mnemonex",
@@ -20,20 +20,20 @@ defmodule Mnemonex.Mixfile do
     [applications: [:logger], mod: {Mnemonex, []}]
   end
 
-  defp deps do
+  def deps do
     [
       {:the_fuzz, "~> 0.5"},
-      {:ex_doc, "~> 0.23", only: :dev},
+      {:ex_doc, "~> 0.23", only: :dev}
     ]
   end
 
-  defp description do
+  def description do
     """
     mnemonicode encoder/decoder
     """
   end
 
-  defp package do
+  def package do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Matt Miller"],
