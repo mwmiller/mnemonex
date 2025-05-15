@@ -1,10 +1,10 @@
-defmodule Mnemonex.Mixfile do
+defmodule Mnemonex.MixProject do
   use Mix.Project
 
   def project do
     [
       app: :mnemonex,
-      version: "1.2.3",
+      version: "1.2.4",
       elixir: "~> 1.7",
       name: "Mnemonex",
       source_url: "https://github.com/mwmiller/mnemonex",
@@ -17,7 +17,9 @@ defmodule Mnemonex.Mixfile do
   end
 
   def application do
-    [applications: [:logger], mod: {Mnemonex, []}]
+    [
+      extra_applications: [:logger]
+    ]
   end
 
   def deps do
